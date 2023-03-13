@@ -1,16 +1,17 @@
 import React from 'react';
-import { View, ActivityIndicator, Dimensions, FlatList, Text, ScrollView } from 'react-native';
+import { View, ActivityIndicator, Dimensions, ScrollView } from 'react-native';
 import { useMovies } from '../hooks/useMovies';
 import Carousel from 'react-native-snap-carousel';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MoviePoster } from '../components/MoviePoster';
+import { HorizontalSlider } from '../components/HorizontalSlider';
 
 
 const { width: windowWidth } = Dimensions.get('window');
 
 export const HomeScreen = () => {
 
-    const { peliculasEnCine, isLoading } = useMovies();
+    const { nowPlaying, popular, topRated, upcoming, isLoading } = useMovies();
     const { top } = useSafeAreaInsets();
 
 
@@ -38,46 +39,17 @@ export const HomeScreen = () => {
                 {/* Carosel principal */}
                 <View style={{ height: 440 }}>
                     <Carousel
-                        data={peliculasEnCine}
+                        data={nowPlaying}
                         renderItem={({ item }: any) => <MoviePoster movie={item} />}
                         sliderWidth={windowWidth}
                         itemWidth={300}
+                        inactiveSlideOpacity={0.9}
                     />
                 </View>
                 {/* Carosel peliculas populares*/}
-                <View style={{ height: 260 }}>
-                    <Text style={{ fontSize: 30, fontWeight: 'bold' }} >En cine</Text>
-                    <FlatList
-                        data={peliculasEnCine}
-                        renderItem={({ item }: any) => (
-                            <MoviePoster
-                                movie={item}
-                                width={140}
-                                height={200}
-                            />
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </View>
-                {/* Carosel peliculas populares*/}
-                <View style={{ height: 260 }}>
-                    <Text style={{ fontSize: 30, fontWeight: 'bold' }} >En cine</Text>
-                    <FlatList
-                        data={peliculasEnCine}
-                        renderItem={({ item }: any) => (
-                            <MoviePoster
-                                movie={item}
-                                width={140}
-                                height={200}
-                            />
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                    />
-                </View>
+                <HorizontalSlider title='Popular' movies={ popular } />
+                <HorizontalSlider title='Top Rated' movies={ topRated } />
+                <HorizontalSlider title='Uncoming' movies={ upcoming } />
             </View>
         </ScrollView>
     )
